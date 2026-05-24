@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>Job Portal</title>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen p-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <!-- EMAIL BOX -->
+
+        <div class="bg-white p-5 rounded-lg border shadow">
+          <h1 class="text-2xl font-bold mb-4">
+            Email Sender
+          </h1>
+
+          <textarea
+            id="emails"
+            rows="10"
+            placeholder="Enter emails separated by commas"
+            class="w-full border rounded-md p-3 outline-none"
+          ></textarea>
+
+          <button
+            onclick="sendEmail()"
+            class="w-full mt-4 bg-black text-white py-3 rounded-md"
+          >
+            Send Email
+          </button>
+        </div>
+
+        <!-- WHATSAPP BOX -->
+
+        <div class="bg-white p-5 rounded-lg border shadow">
+          <h1 class="text-2xl font-bold mb-4">
+            WhatsApp Sender
+          </h1>
+
+          <input
+            type="text"
+            id="number"
+            placeholder="Enter WhatsApp Number"
+            class="w-full border rounded-md p-3 outline-none"
+          />
+
+          <button
+            onclick="sendWhatsapp()"
+            class="w-full mt-4 bg-green-600 text-white py-3 rounded-md"
+          >
+            Open WhatsApp
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+
+      async function sendEmail() {
+        try {
+
+          const emails = document
+            .getElementById("emails")
+            .value
+            .split(",")
+            .map((email) => email.trim())
+            .filter((email) => email);
+
+          if (emails.length === 0) {
+            return alert("Please enter emails");
+          }
+
+          const response = await fetch("/send-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              emails,
+            }),
+          });
+
+          const data = await response.json();
+
+          alert(data.message);
+
+          document.getElementById("emails").value = "";
+
+        } catch (error) {
+
+          console.log(error);
+
+          alert("Failed To Send Email");
+        }
+      }
+
+      async function sendWhatsapp() {
+
+        try {
+
+          const number = document.getElementById("number").value;
+
+          if (!number) {
+            return alert("Please enter number");
+          }
+
+          const response = await fetch("/send-whatsapp", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              number,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (!data.success) {
+            return alert(data.message);
+          }
+
+          window.open(data.url, "_blank");
+
+          alert("Opening WhatsApp");
+
+        } catch (error) {
+
+          console.log(error);
+
+          alert("Failed To Open WhatsApp");
+        }
+      }
+
+    </script>
+  </body>
+</html>

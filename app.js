@@ -11,11 +11,6 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = 5000;
-
-// =======================
-// FILE PATH
-// =======================
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -23,10 +18,6 @@ const RESUME_PATH = path.join(
   __dirname,
   "SurajNyavanandi-26R.pdf"
 );
-
-// =======================
-// EMAIL SETUP
-// =======================
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -36,17 +27,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// =======================
-// HOME ROUTE
-// =======================
-
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
-
-// =======================
-// SEND EMAIL
-// =======================
 
 app.post("/send-email", async (req, res) => {
   try {
@@ -81,30 +64,13 @@ app.post("/send-email", async (req, res) => {
         subject: "Application for MERN Stack Developer Role - Suraj Nyavanandi",
 
         html: `
-<div style="font-family:Arial,sans-serif;line-height:1.5;color:#111;">
-<p>Hi,</p>
-
-<p>I'm <b>Suraj Nyavanandi</b>, a MERN Stack Developer with 11 months of hands-on training and production-ready projects.</p>
-
+<div style="font-family:Arial,sans-serif;line-height:1.6;color:#111;">
+<p>I'm <b>Suraj Nyavanandi</b>, a <b>Fresher MERN Stack Developer</b> with 11 months of hands-on training and production-ready projects.</p>
 <p>
 <b>Portfolio:</b> https://virattom.com<br>
 <b>GitHub:</b> https://github.com/SurajNyavanandi<br>
-<b>LinkedIn:</b> https://www.linkedin.com/in/suraj-nyavanandi-305962286
-</p>
-
-<p>
-<b>Projects:</b><br>
-• E-Commerce: shop.virattom.com<br>
-• Invoice System: invoice.virattom.com<br>
-• AI Chatbot: chat.virattom.com
-</p>
-
-<p>Available for immediate joining. Resume attached.</p>
-
-<p>
-Thanks,<br>
-<b>Suraj Nyavanandi</b><br>
-+91-9666635009
+<b>LinkedIn:</b> https://www.linkedin.com/in/suraj-nyavanandi-305962286<br>
+<b>Contact:</b> <a href="tel:+919666635009">+91 96666 35009</a><br>
 </p>
 </div>
 `,
@@ -136,10 +102,6 @@ Thanks,<br>
   }
 });
 
-// =======================
-// SEND WHATSAPP
-// =======================
-
 app.post("/send-whatsapp", async (req, res) => {
   try {
     const { number } = req.body;
@@ -157,16 +119,13 @@ app.post("/send-whatsapp", async (req, res) => {
 
     const message = `Hi,
 
-I'm Suraj Nyavanandi, MERN Stack Developer.
+I'm Suraj Nyavanandi,
+
+*FRESHER MERN STACK DEVELOPER*
 
 Portfolio: https://virattom.com
 GitHub: https://github.com/SurajNyavanandi
 LinkedIn: https://www.linkedin.com/in/suraj-nyavanandi-305962286
-
-Projects:
-• E-Commerce: shop.virattom.com
-• Invoice System: invoice.virattom.com
-• AI Chatbot: chat.virattom.com
 
 Available immediately.
 
@@ -196,10 +155,6 @@ Suraj Nyavanandi
     });
   }
 });
-
-// =======================
-// START SERVER
-// =======================
 
 app.listen(PORT, () => {
   console.log(`\n✓ Server running on http://localhost:${PORT}\n`);

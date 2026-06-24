@@ -3,9 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <script src="https://cdn.tailwindcss.com"></script>
-
     <title>Job Portal</title>
   </head>
 
@@ -13,47 +11,84 @@
     <div class="max-w-6xl mx-auto">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <!-- EMAIL BOX -->
-
+        <!-- FRESHER SECTION - NO CHANGES -->
         <div class="bg-white p-5 rounded-lg border shadow">
-          <h1 class="text-2xl font-bold mb-4">
-            Email Sender
-          </h1>
+          <div class="bg-green-600 text-white p-2 rounded-t-lg -mt-5 -mx-5 mb-4 text-center">
+            <h2 class="font-bold">🌟 Fresher</h2>
+          </div>
 
           <textarea
-            id="emails"
-            rows="10"
+            id="fresherEmails"
+            rows="8"
             placeholder="Enter emails separated by commas"
-            class="w-full border rounded-md p-3 outline-none"
+            class="w-full border rounded-md p-3 outline-none text-sm"
           ></textarea>
 
           <button
-            onclick="sendEmail()"
-            class="w-full mt-4 bg-black text-white py-3 rounded-md"
+            onclick="sendFresherEmail()"
+            class="w-full mt-3 bg-black text-white py-2 rounded-md text-sm hover:bg-gray-800 transition"
           >
             Send Email
           </button>
-        </div>
 
-        <!-- WHATSAPP BOX -->
-
-        <div class="bg-white p-5 rounded-lg border shadow">
-          <h1 class="text-2xl font-bold mb-4">
-            WhatsApp Sender
-          </h1>
+          <hr class="my-3 border-gray-200">
 
           <input
             type="text"
-            id="number"
+            id="fresherNumber"
             placeholder="Enter WhatsApp Number"
-            class="w-full border rounded-md p-3 outline-none"
+            class="w-full border rounded-md p-3 outline-none text-sm"
           />
 
           <button
-            onclick="sendWhatsapp()"
-            class="w-full mt-4 bg-green-600 text-white py-3 rounded-md"
+            onclick="sendFresherWhatsapp()"
+            class="w-full mt-3 bg-green-600 text-white py-2 rounded-md text-sm hover:bg-green-700 transition"
           >
-            Open WhatsApp
+            Send WhatsApp
+          </button>
+        </div>
+
+        <!-- EXPERIENCED SECTION - Minimalistic -->
+        <div class="bg-white p-5 rounded-lg border shadow">
+          <div class="bg-blue-600 text-white p-2 rounded-t-lg -mt-5 -mx-5 mb-4 text-center">
+            <h2 class="font-bold">💼 Experienced</h2>
+            <p class="text-xs opacity-90">Requesting fresher consideration</p>
+          </div>
+
+          <div class="bg-yellow-50 p-2 rounded-md border border-yellow-200 mb-3">
+            <p class="text-xs text-yellow-800 text-center">
+              Acknowledging 1+ year requirement • Requesting fresher consideration
+            </p>
+          </div>
+
+          <textarea
+            id="experiencedEmails"
+            rows="8"
+            placeholder="Enter emails separated by commas"
+            class="w-full border rounded-md p-3 outline-none text-sm"
+          ></textarea>
+
+          <button
+            onclick="sendExperiencedEmail()"
+            class="w-full mt-3 bg-blue-600 text-white py-2 rounded-md text-sm hover:bg-blue-700 transition"
+          >
+            Send Email
+          </button>
+
+          <hr class="my-3 border-gray-200">
+
+          <input
+            type="text"
+            id="experiencedNumber"
+            placeholder="Enter WhatsApp Number"
+            class="w-full border rounded-md p-3 outline-none text-sm"
+          />
+
+          <button
+            onclick="sendExperiencedWhatsapp()"
+            class="w-full mt-3 bg-green-600 text-white py-2 rounded-md text-sm hover:bg-green-700 transition"
+          >
+            Send WhatsApp
           </button>
         </div>
 
@@ -61,12 +96,11 @@
     </div>
 
     <script>
-
-      async function sendEmail() {
+      // FRESHER FUNCTIONS
+      async function sendFresherEmail() {
         try {
-
           const emails = document
-            .getElementById("emails")
+            .getElementById("fresherEmails")
             .value
             .split(",")
             .map((email) => email.trim())
@@ -76,68 +110,85 @@
             return alert("Please enter emails");
           }
 
-          const response = await fetch("/send-email", {
+          const response = await fetch("/send-fresher-email", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              emails,
-            }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ emails }),
           });
 
           const data = await response.json();
-
           alert(data.message);
-
-          document.getElementById("emails").value = "";
-
+          document.getElementById("fresherEmails").value = "";
         } catch (error) {
-
-          console.log(error);
-
           alert("Failed To Send Email");
         }
       }
 
-      async function sendWhatsapp() {
-
+      async function sendFresherWhatsapp() {
         try {
+          const number = document.getElementById("fresherNumber").value;
+          if (!number) return alert("Please enter number");
 
-          const number = document.getElementById("number").value;
-
-          if (!number) {
-            return alert("Please enter number");
-          }
-
-          const response = await fetch("/send-whatsapp", {
+          const response = await fetch("/send-fresher-whatsapp", {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              number,
-            }),
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ number }),
           });
 
           const data = await response.json();
-
-          if (!data.success) {
-            return alert(data.message);
-          }
-
+          if (!data.success) return alert(data.message);
           window.open(data.url, "_blank");
-
-          alert("Opening WhatsApp");
-
         } catch (error) {
-
-          console.log(error);
-
           alert("Failed To Open WhatsApp");
         }
       }
 
+      // EXPERIENCED FUNCTIONS
+      async function sendExperiencedEmail() {
+        try {
+          const emails = document
+            .getElementById("experiencedEmails")
+            .value
+            .split(",")
+            .map((email) => email.trim())
+            .filter((email) => email);
+
+          if (emails.length === 0) {
+            return alert("Please enter emails");
+          }
+
+          const response = await fetch("/send-experienced-email", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ emails }),
+          });
+
+          const data = await response.json();
+          alert(data.message);
+          document.getElementById("experiencedEmails").value = "";
+        } catch (error) {
+          alert("Failed To Send Email");
+        }
+      }
+
+      async function sendExperiencedWhatsapp() {
+        try {
+          const number = document.getElementById("experiencedNumber").value;
+          if (!number) return alert("Please enter number");
+
+          const response = await fetch("/send-experienced-whatsapp", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ number }),
+          });
+
+          const data = await response.json();
+          if (!data.success) return alert(data.message);
+          window.open(data.url, "_blank");
+        } catch (error) {
+          alert("Failed To Open WhatsApp");
+        }
+      }
     </script>
   </body>
 </html>
